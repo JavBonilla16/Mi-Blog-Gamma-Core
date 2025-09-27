@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}Editar Post{% else %}Nuevo Post{% endif %} - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    {% if object %}
+                        <i class="fas fa-edit"></i> Editar Post
+                    {% else %}
+                        <i class="fas fa-plus"></i> Nuevo Post
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Título</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.excerpt.id_for_label }}" class="form-label">Resumen</label>
+                        {{ form.excerpt }}
+                        {% if form.excerpt.errors %}
+                            <div class="text-danger">{{ form.excerpt.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">Breve descripción del post (opcional).</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.cover_image.id_for_label }}" class="form-label">Imagen de portada</label>
+                        {{ form.cover_image }}
+                        {% if form.cover_image.errors %}
+                            <div class="text-danger">{{ form.cover_image.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">Imagen que aparecerá como portada del post (opcional).</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.tags.id_for_label }}" class="form-label">Etiquetas</label>
+                        {{ form.tags }}
+                        {% if form.tags.errors %}
+                            <div class="text-danger">{{ form.tags.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">Separa las etiquetas con comas (ej: django, python, web).</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">Contenido</label>
+                        {{ form.content }}
+                        {% if form.content.errors %}
+                            <div class="text-danger">{{ form.content.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        {{ form.published }}
+                        <label class="form-check-label" for="{{ form.published.id_for_label }}">
+                            Publicar inmediatamente
+                        </label>
+                        {% if form.published.errors %}
+                            <div class="text-danger">{{ form.published.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'blog:post_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> 
+                            {% if object %}Actualizar Post{% else %}Crear Post{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
