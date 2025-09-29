@@ -41,7 +41,7 @@
                     <p class="card-text text-muted">
                         <small>
                             Por <strong>{{ post.author.first_name }} {{ post.author.last_name }}</strong>
-                            el {{ post.published_date|date:"d M Y" }}
+                            el {{ post.published_date|date:"d M Y" }} {{ post.reading_time }} min lectura
                         </small>
                     </p>
                     {% if post.excerpt %}
@@ -143,4 +143,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
