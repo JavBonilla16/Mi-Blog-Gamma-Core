@@ -5,6 +5,8 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
+import math
+from django.utils.html import strip_tags
 
 class Post(models.Model):
     title = models.CharField(max_length=200, verbose_name='Título')
@@ -25,9 +27,16 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-
+    
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+
+    @property
+    def reading_time(self):
+        text = strip_tags(self.content or "")
+        word_count = len(text.split())
+        minutes = math.ceil(word_count / 200) if word_count > 0 else 1
+        return max(1, int(minutes))
 
     def publish(self):
         self.published_date = timezone.now()
@@ -98,4 +107,5 @@ class Review(models.Model):
         verbose_name_plural = 'Reseñas'
 
     def __str__(self):
+
         return f'{self.user.username} - {self.rating} estrellas para {self.post.title}'
