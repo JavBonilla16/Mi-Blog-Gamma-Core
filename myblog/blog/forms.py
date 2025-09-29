@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Comment, Profile, Post, Review
+from django.utils.text import slugify
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -75,6 +76,22 @@ class PostForm(forms.ModelForm):
                 'placeholder': 'Etiquetas separadas por comas'
             }),
         }
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if not instance.slug:
+            base_slug = slugify(instance.title)[:200]
+            slug = base_slug
+            i = 1
+            # asegura la unicidad
+            while Post.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{i}"
+                i += 1
+            instance.slug = slug
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
 
 class ReviewForm(forms.ModelForm):
     class Meta:
