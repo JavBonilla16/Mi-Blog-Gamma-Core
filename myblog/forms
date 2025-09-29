@@ -3,19 +3,37 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Comment, Profile, Post, Review
 
+# ---------------------------
+# FORMULARIO DE USUARIOS
+# ---------------------------
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(required=True, label="Correo electrónico")
+    first_name = forms.CharField(max_length=30, required=True, label="Nombre")
+    last_name = forms.CharField(max_length=30, required=True, label="Apellido")
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = (
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'password1',
+            'password2',
+        )
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
 
     def clean_email(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError(" correo electrónico ya está en uso.")
+            raise forms.ValidationError("Este correo electrónico ya está en uso.")
         return email
 
     def save(self, commit=True):
@@ -25,21 +43,78 @@ class CustomUserCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data['last_name']
         if commit:
             user.save()
+            # Crea un perfil vacío al registrar
             Profile.objects.create(user=user)
         return user
 
 
+# ---------------------------
+# FORMULARIO DE RESEÑAS
+# ---------------------------
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ('rating', 'comment')
         widgets = {
-            'rating': forms.Select(choices=[(i, f'{i} estrella{"s" if i != 1 else ""}') for i in range(1, 6)], attrs={
-                'class': 'form-control'
-            }),
-            'comment': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 3,
-                'placeholder': "alterno" 
-            }),
+            'rating': forms.Select(
+                choices=[(i, f'{i} estrella{"s" if i != 1 else ""}') for i in range(1, 6)],
+                attrs={'class': 'form-control'}
+            ),
+            'comment': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 3,
+                    'placeholder': "Escribe tu opinión aquí..."
+                }
+            ),
         }
+
+    def clean_comment(self):
+        comment = self.cleaned_data.get('comment', '')
+        if len(comment) < 10:
+            raise forms.ValidationError("El comentario debe tener al menos 10 caracteres.")
+        return comment
+
+
+# ---------------------------
+# FORMULARIO DE COMENTARIOS EN POSTS
+# ---------------------------
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)
+        widgets = {
+            'content': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 2,
+                    'placeholder': "Escribe un comentario..."
+                }
+            ),
+        }
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content', '')
+        if len(content.strip()) == 0:
+            raise forms.ValidationError("El comentario no puede estar vacío.")
+        return content
+
+
+# ---------------------------
+# FORMULARIO PARA CREAR/EDITAR POSTS
+# ---------------------------
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'content', 'image')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Título del post"}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': "Escribe el contenido aquí..."}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title', '')
+        if len(title) < 5:
+            raise forms.ValidationError("El título debe tener al menos 5 caracteres.")
+        return title
