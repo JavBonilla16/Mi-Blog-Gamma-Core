@@ -12,7 +12,7 @@
             <div class="text-muted mb-4">
                 <small>
                     Publicado por <strong>{{ post.author.first_name }} {{ post.author.last_name }}</strong>
-                    el {{ post.published_date|date:"d M Y \a \l\a\s H:i" }}
+                    el {{ post.published_date|date:"d M Y \a \l\a\s H:i" }} - {{ post.reading_time }} min lectura
                 </small>
             </div>
             
@@ -192,4 +192,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
