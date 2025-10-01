@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Suscripciones - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Mis Suscripciones</h2>
+        <p class="text-muted">Gestiona tus suscripciones para recibir notificaciones sobre nuevos posts.</p>
+        
+        <!-- Suscripciones actuales -->
+        {% if subscriptions %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Suscripciones Activas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for subscription in subscriptions %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                {% if subscription.subscription_type == 'author' %}
+                                                    <h6 class="card-title">
+                                                        <i class="fas fa-user text-primary"></i>
+                                                        {{ subscription.author.first_name }} {{ subscription.author.last_name }}
+                                                    </h6>
+                                                    <small class="text-muted">@{{ subscription.author.username }}</small>
+                                                {% else %}
+                                                    <h6 class="card-title">
+                                                        <i class="fas fa-tag text-info"></i>
+                                                        {{ subscription.tag }}
+                                                    </h6>
+                                                    <small class="text-muted">Etiqueta</small>
+                                                {% endif %}
+                                            </div>
+                                            <form method="post" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="subscription_type" value="{{ subscription.subscription_type }}">
+                                                {% if subscription.subscription_type == 'author' %}
+                                                    <input type="hidden" name="author_id" value="{{ subscription.author.id }}">
+                                                {% else %}
+                                                    <input type="hidden" name="tag_name" value="{{ subscription.tag }}">
+                                                {% endif %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-times"></i> Desuscribirse
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <h4>No tienes suscripciones</h4>
+                <p>Suscríbete a autores o etiquetas para recibir notificaciones sobre nuevos posts.</p>
+            </div>
+        {% endif %}
+        
+        <!-- Formularios para nuevas suscripciones -->
+        <div class="row">
+            <!-- Suscribirse a autor -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Suscribirse a Autor</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="subscription_type" value="author">
+                            <div class="mb-3">
+                                <label class="form-label">Seleccionar autor:</label>
+                                <select name="author_id" class="form-select" required>
+                                    <option value="">-- Seleccionar autor --</option>
+                                    {% for author in authors %}
+                                        <option value="{{ author.id }}">
+                                            {{ author.first_name }} {{ author.last_name }} (@{{ author.username }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Suscribirse
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Suscribirse a etiqueta -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Suscribirse a Etiqueta</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="subscription_type" value="tag">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre de la etiqueta:</label>
+                                <input type="text" name="tag_name" class="form-control" 
+                                       placeholder="Ej: tecnología, programación..." required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Suscribirse
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feeds RSS -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Feeds RSS</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Accede a feeds RSS para tus suscripciones:</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="{% url 'blog:rss_feed' %}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-rss"></i> Todos los posts
+                        </a>
+                    </div>
+                    {% for subscription in subscriptions %}
+                        <div class="col-md-4 mb-2">
+                            {% if subscription.subscription_type == 'author' %}
+                                <a href="{% url 'blog:rss_feed_filtered' 'author' subscription.author.id %}" 
+                                   class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-rss"></i> {{ subscription.author.username }}
+                                </a>
+                            {% else %}
+                                <a href="{% url 'blog:rss_feed_filtered' 'tag' subscription.tag %}" 
+                                   class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-rss"></i> {{ subscription.tag }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Información</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Suscripciones:</strong> {{ subscriptions.count }}</p>
+                <hr>
+                <h6>¿Cómo funcionan las suscripciones?</h6>
+                <ul class="small">
+                    <li>Recibirás notificaciones cuando haya nuevos posts</li>
+                    <li>Puedes suscribirte a autores específicos</li>
+                    <li>Puedes suscribirte a etiquetas/temas</li>
+                    <li>Accede a feeds RSS para cada suscripción</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Navegación</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'blog:post_list' %}" class="btn btn-outline-primary btn-sm mb-2">
+                    <i class="fas fa-home"></i> Ir al blog
+                </a>
+                <a href="{% url 'blog:notifications' %}" class="btn btn-outline-info btn-sm mb-2">
+                    <i class="fas fa-bell"></i> Ver notificaciones
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

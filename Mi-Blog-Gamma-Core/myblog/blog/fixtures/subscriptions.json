@@ -1,0 +1,57 @@
+[
+  {
+    "model": "blog.subscription",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "subscription_type": "author",
+      "author": 2,
+      "tag": "",
+      "created_date": "2025-01-27T10:00:00Z"
+    }
+  },
+  {
+    "model": "blog.subscription",
+    "pk": 2,
+    "fields": {
+      "user": 4,
+      "subscription_type": "author",
+      "author": 3,
+      "tag": "",
+      "created_date": "2025-01-27T10:00:00Z"
+    }
+  },
+  {
+    "model": "blog.subscription",
+    "pk": 3,
+    "fields": {
+      "user": 5,
+      "subscription_type": "tag",
+      "author": null,
+      "tag": "django",
+      "created_date": "2025-01-27T10:00:00Z"
+    }
+  },
+  {
+    "model": "blog.subscription",
+    "pk": 4,
+    "fields": {
+      "user": 2,
+      "subscription_type": "tag",
+      "author": null,
+      "tag": "python",
+      "created_date": "2025-01-27T10:00:00Z"
+    }
+  },
+  {
+    "model": "blog.subscription",
+    "pk": 5,
+    "fields": {
+      "user": 3,
+      "subscription_type": "tag",
+      "author": null,
+      "tag": "desarrollo-web",
+      "created_date": "2025-01-27T10:00:00Z"
+    }
+  }
+]

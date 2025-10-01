@@ -1,0 +1,4 @@
+Django==4.2.23
+django-ckeditor==6.7.3
+django-taggit==6.1.0
+Pillow==11.1.0

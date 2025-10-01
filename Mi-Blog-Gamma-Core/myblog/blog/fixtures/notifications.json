@@ -1,0 +1,67 @@
+[
+  {
+    "model": "blog.notification",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "notification_type": "mention",
+      "title": "Te mencionaron en un comentario",
+      "message": "María López te mencionó en un comentario del post \"Introducción a Django: Tu primer proyecto web\"",
+      "url": "/post/introduccion-django-primer-proyecto-web/",
+      "is_read": false,
+      "created_date": "2025-01-27T10:30:00Z"
+    }
+  },
+  {
+    "model": "blog.notification",
+    "pk": 2,
+    "fields": {
+      "user": 3,
+      "notification_type": "mention",
+      "title": "Te mencionaron en un comentario",
+      "message": "Javier García te mencionó en un comentario del post \"Las mejores prácticas en programación Python\"",
+      "url": "/post/mejores-practicas-programacion-python/",
+      "is_read": false,
+      "created_date": "2025-01-27T11:30:00Z"
+    }
+  },
+  {
+    "model": "blog.notification",
+    "pk": 3,
+    "fields": {
+      "user": 2,
+      "notification_type": "comment",
+      "title": "Nuevo comentario en tu post",
+      "message": "María López comentó en tu post \"Introducción a Django: Tu primer proyecto web\"",
+      "url": "/post/introduccion-django-primer-proyecto-web/",
+      "is_read": true,
+      "created_date": "2025-01-27T10:30:00Z"
+    }
+  },
+  {
+    "model": "blog.notification",
+    "pk": 4,
+    "fields": {
+      "user": 3,
+      "notification_type": "reaction",
+      "title": "Nueva reacción en tu post",
+      "message": "Javier García reaccionó con 😮 a tu post \"Las mejores prácticas en programación Python\"",
+      "url": "/post/mejores-practicas-programacion-python/",
+      "is_read": true,
+      "created_date": "2025-01-27T11:15:00Z"
+    }
+  },
+  {
+    "model": "blog.notification",
+    "pk": 5,
+    "fields": {
+      "user": 4,
+      "notification_type": "mention",
+      "title": "Te mencionaron en un comentario",
+      "message": "Javier García te mencionó en un comentario del post \"Tendencias en desarrollo web 2025\"",
+      "url": "/post/tendencias-desarrollo-web-2025/",
+      "is_read": false,
+      "created_date": "2025-01-27T13:30:00Z"
+    }
+  }
+]

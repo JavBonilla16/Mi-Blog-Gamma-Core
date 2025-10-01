@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Post - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h5>¿Estás seguro de que quieres eliminar este post?</h5>
+                    <p>Esta acción no se puede deshacer. Se eliminarán también todos los comentarios y reseñas asociados.</p>
+                </div>
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ object.title }}</h5>
+                        <p class="card-text text-muted">
+                            <small>
+                                Por {{ object.author.first_name }} {{ object.author.last_name }}
+                                el {{ object.created_date|date:"d M Y" }}
+                            </small>
+                        </p>
+                        {% if object.excerpt %}
+                            <p class="card-text">{{ object.excerpt }}</p>
+                        {% else %}
+                            <p class="card-text">{{ object.content|striptags|truncatewords:20 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'blog:post_detail' object.slug %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Sí, eliminar post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

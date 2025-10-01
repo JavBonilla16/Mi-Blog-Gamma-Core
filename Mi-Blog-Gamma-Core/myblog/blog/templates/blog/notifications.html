@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Notificaciones - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Notificaciones</h2>
+            {% if unread_count > 0 %}
+                <span class="badge bg-primary">{{ unread_count }} sin leer</span>
+            {% endif %}
+        </div>
+        
+        {% if notifications %}
+            <div class="list-group">
+                {% for notification in notifications %}
+                    <div class="list-group-item {% if not notification.is_read %}list-group-item-light{% endif %}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">
+                                {% if not notification.is_read %}
+                                    <i class="fas fa-circle text-primary" style="font-size: 0.5em;"></i>
+                                {% endif %}
+                                {{ notification.title }}
+                            </h6>
+                            <small class="text-muted">{{ notification.created_date|date:"d M Y H:i" }}</small>
+                        </div>
+                        <p class="mb-1">{{ notification.message }}</p>
+                        {% if notification.url %}
+                            <a href="{{ notification.url }}" class="btn btn-sm btn-outline-primary">
+                                Ver más
+                            </a>
+                        {% endif %}
+                        {% if not notification.is_read %}
+                            <button class="btn btn-sm btn-outline-secondary mark-read-btn" 
+                                    data-notification-id="{{ notification.id }}">
+                                Marcar como leída
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <h4>No tienes notificaciones</h4>
+                <p>Cuando recibas menciones o interacciones, aparecerán aquí.</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Acciones</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'blog:post_list' %}" class="btn btn-outline-primary btn-sm mb-2">
+                    <i class="fas fa-home"></i> Ir al blog
+                </a>
+                <a href="{% url 'blog:subscriptions' %}" class="btn btn-outline-info btn-sm mb-2">
+                    <i class="fas fa-bell"></i> Gestionar suscripciones
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejar botones de marcar como leída
+    document.querySelectorAll('.mark-read-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const notificationId = this.dataset.notificationId;
+            markAsRead(notificationId, this);
+        });
+    });
+});
+
+function markAsRead(notificationId, button) {
+    fetch(`/notification/${notificationId}/read/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remover el botón y actualizar el estilo
+            button.remove();
+            const listItem = button.closest('.list-group-item');
+            listItem.classList.remove('list-group-item-light');
+            listItem.classList.add('list-group-item-secondary');
+            
+            // Remover el indicador de no leído
+            const indicator = listItem.querySelector('.fa-circle');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

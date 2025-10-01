@@ -1,0 +1,86 @@
+[
+  {
+    "model": "blog.comment",
+    "pk": 1,
+    "fields": {
+      "post": 1,
+      "author": 3,
+      "content": "Excelente tutorial! Me ayudó mucho a entender Django. @javier ¿podrías hacer un artículo sobre modelos avanzados?",
+      "created_date": "2025-01-27T10:30:00Z",
+      "is_approved": true,
+      "pinned": false
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 2,
+    "fields": {
+      "post": 1,
+      "author": 4,
+      "content": "Muy buen post. Django es realmente potente para desarrollo web. ¿Alguien más ha usado Django con Docker?",
+      "created_date": "2025-01-27T11:00:00Z",
+      "is_approved": true,
+      "pinned": false
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 3,
+    "fields": {
+      "post": 2,
+      "author": 2,
+      "content": "Gracias @maria por compartir estas prácticas. El tema de documentación es crucial. He visto muchos proyectos sin documentación adecuada.",
+      "created_date": "2025-01-27T11:30:00Z",
+      "is_approved": true,
+      "pinned": true
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 4,
+    "fields": {
+      "post": 2,
+      "author": 5,
+      "content": "¿Podrías profundizar más en el manejo de errores? Me gustaría ver ejemplos más específicos.",
+      "created_date": "2025-01-27T12:00:00Z",
+      "is_approved": true,
+      "pinned": false
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 5,
+    "fields": {
+      "post": 3,
+      "author": 3,
+      "content": "DRF es genial! @javier ¿has probado GraphQL con Django? Sería interesante comparar ambos enfoques.",
+      "created_date": "2025-01-27T12:30:00Z",
+      "is_approved": true,
+      "pinned": false
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 6,
+    "fields": {
+      "post": 4,
+      "author": 2,
+      "content": "Las PWAs están revolucionando el desarrollo móvil. @carlos ¿tienes experiencia implementándolas?",
+      "created_date": "2025-01-27T13:30:00Z",
+      "is_approved": true,
+      "pinned": false
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 7,
+    "fields": {
+      "post": 5,
+      "author": 4,
+      "content": "El caching es fundamental para aplicaciones de alto tráfico. @ana ¿recomiendas Redis o Memcached?",
+      "created_date": "2025-01-27T14:30:00Z",
+      "is_approved": true,
+      "pinned": false
+    }
+  }
+]

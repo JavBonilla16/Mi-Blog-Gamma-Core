@@ -1,0 +1,112 @@
+[
+  {
+    "model": "blog.commentvote",
+    "pk": 1,
+    "fields": {
+      "comment": 1,
+      "user": 2,
+      "vote": 1,
+      "created_date": "2025-01-27T10:35:00Z",
+      "updated_date": "2025-01-27T10:35:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 2,
+    "fields": {
+      "comment": 1,
+      "user": 4,
+      "vote": 1,
+      "created_date": "2025-01-27T10:40:00Z",
+      "updated_date": "2025-01-27T10:40:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 3,
+    "fields": {
+      "comment": 1,
+      "user": 5,
+      "vote": 1,
+      "created_date": "2025-01-27T11:00:00Z",
+      "updated_date": "2025-01-27T11:00:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 4,
+    "fields": {
+      "comment": 2,
+      "user": 2,
+      "vote": 1,
+      "created_date": "2025-01-27T11:05:00Z",
+      "updated_date": "2025-01-27T11:05:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 5,
+    "fields": {
+      "comment": 2,
+      "user": 3,
+      "vote": -1,
+      "created_date": "2025-01-27T11:10:00Z",
+      "updated_date": "2025-01-27T11:10:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 6,
+    "fields": {
+      "comment": 3,
+      "user": 3,
+      "vote": 1,
+      "created_date": "2025-01-27T11:35:00Z",
+      "updated_date": "2025-01-27T11:35:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 7,
+    "fields": {
+      "comment": 3,
+      "user": 4,
+      "vote": 1,
+      "created_date": "2025-01-27T11:40:00Z",
+      "updated_date": "2025-01-27T11:40:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 8,
+    "fields": {
+      "comment": 3,
+      "user": 5,
+      "vote": 1,
+      "created_date": "2025-01-27T12:00:00Z",
+      "updated_date": "2025-01-27T12:00:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 9,
+    "fields": {
+      "comment": 4,
+      "user": 2,
+      "vote": 1,
+      "created_date": "2025-01-27T12:05:00Z",
+      "updated_date": "2025-01-27T12:05:00Z"
+    }
+  },
+  {
+    "model": "blog.commentvote",
+    "pk": 10,
+    "fields": {
+      "comment": 5,
+      "user": 2,
+      "vote": 1,
+      "created_date": "2025-01-27T12:35:00Z",
+      "updated_date": "2025-01-27T12:35:00Z"
+    }
+  }
+]

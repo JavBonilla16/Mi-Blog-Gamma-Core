@@ -1,0 +1,21 @@
+Hola {{ user.first_name }},
+
+Se han publicado {% if posts.count == 1 %}un nuevo post{% else %}{{ posts.count }} nuevos posts{% endif %} sobre "{{ tag }}":
+
+{% for post in posts %}
+- {{ post.title }}
+  Por: {{ post.author.first_name }} {{ post.author.last_name }}
+  Publicado: {{ post.published_date|date:"d M Y \a \l\a\s H:i" }}
+  Resumen: {{ post.excerpt|truncatewords:20 }}
+  
+  Leer más: http://localhost:8000{{ post.get_absolute_url }}
+
+{% endfor %}
+
+¡No te pierdas estos nuevos contenidos sobre {{ tag }}!
+
+Saludos,
+El equipo de Mi Blog
+
+---
+Para gestionar tus suscripciones, visita: http://localhost:8000{% url 'blog:subscriptions' %}

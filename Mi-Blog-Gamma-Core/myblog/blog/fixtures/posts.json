@@ -1,0 +1,72 @@
+[
+  {
+    "model": "blog.post",
+    "pk": 1,
+    "fields": {
+      "title": "Introducción a Django: Tu primer proyecto web",
+      "slug": "introduccion-django-primer-proyecto-web",
+      "author": 2,
+      "content": "<p>Django es un framework web de alto nivel escrito en Python que fomenta el desarrollo rápido y el diseño limpio y pragmático. En este artículo te mostraremos cómo crear tu primer proyecto Django desde cero.</p><p>Primero, necesitas instalar Django en tu sistema. Puedes hacerlo usando pip:</p><pre><code>pip install django</code></pre><p>Una vez instalado, puedes crear un nuevo proyecto con el siguiente comando:</p><pre><code>django-admin startproject mi_proyecto</code></pre><p>Esto creará una estructura básica de directorios y archivos para tu proyecto Django.</p>",
+      "excerpt": "Aprende los fundamentos de Django y crea tu primer proyecto web con este tutorial paso a paso.",
+      "created_date": "2025-01-27T10:00:00Z",
+      "published_date": "2025-01-27T10:00:00Z",
+      "published": true
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 2,
+    "fields": {
+      "title": "Las mejores prácticas en programación Python",
+      "slug": "mejores-practicas-programacion-python",
+      "author": 3,
+      "content": "<p>Python es un lenguaje de programación versátil y poderoso. En este artículo exploraremos las mejores prácticas que todo desarrollador Python debería seguir.</p><h3>1. Nomenclatura</h3><p>Usa nombres descriptivos para variables, funciones y clases. Sigue la convención PEP 8 para mantener consistencia.</p><h3>2. Documentación</h3><p>Documenta tu código usando docstrings y comentarios cuando sea necesario.</p><h3>3. Manejo de errores</h3><p>Usa try-except blocks apropiadamente y maneja las excepciones de manera específica.</p>",
+      "excerpt": "Descubre las mejores prácticas que todo desarrollador Python debería conocer para escribir código limpio y mantenible.",
+      "created_date": "2025-01-27T11:00:00Z",
+      "published_date": "2025-01-27T11:00:00Z",
+      "published": true
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 3,
+    "fields": {
+      "title": "Desarrollo de APIs REST con Django REST Framework",
+      "slug": "desarrollo-apis-rest-django-rest-framework",
+      "author": 2,
+      "content": "<p>Django REST Framework (DRF) es una herramienta poderosa para crear APIs REST en Django. Te mostraremos cómo crear una API completa paso a paso.</p><h3>Instalación</h3><pre><code>pip install djangorestframework</code></pre><h3>Configuración</h3><p>Agrega 'rest_framework' a tu INSTALLED_APPS en settings.py.</p><h3>Serializers</h3><p>Los serializers permiten convertir modelos Django a JSON y viceversa.</p>",
+      "excerpt": "Aprende a crear APIs REST robustas y escalables usando Django REST Framework con ejemplos prácticos.",
+      "created_date": "2025-01-27T12:00:00Z",
+      "published_date": "2025-01-27T12:00:00Z",
+      "published": true
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 4,
+    "fields": {
+      "title": "Tendencias en desarrollo web 2025",
+      "slug": "tendencias-desarrollo-web-2025",
+      "author": 4,
+      "content": "<p>El desarrollo web está en constante evolución. Aquí te presentamos las tendencias más importantes para 2025:</p><h3>1. Inteligencia Artificial</h3><p>La IA está transformando cómo desarrollamos y interactuamos con aplicaciones web.</p><h3>2. Progressive Web Apps (PWA)</h3><p>Las PWAs ofrecen una experiencia similar a las aplicaciones nativas.</p><h3>3. Microservicios</h3><p>La arquitectura de microservicios sigue ganando popularidad.</p>",
+      "excerpt": "Explora las tendencias más importantes en desarrollo web que marcarán el 2025 y cómo prepararte para ellas.",
+      "created_date": "2025-01-27T13:00:00Z",
+      "published_date": "2025-01-27T13:00:00Z",
+      "published": true
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 5,
+    "fields": {
+      "title": "Optimización de bases de datos en Django",
+      "slug": "optimizacion-bases-datos-django",
+      "author": 5,
+      "content": "<p>El rendimiento de las bases de datos es crucial para aplicaciones Django. Te mostramos técnicas de optimización:</p><h3>1. Queries eficientes</h3><p>Usa select_related() y prefetch_related() para reducir el número de queries.</p><h3>2. Índices de base de datos</h3><p>Configura índices apropiados en tus modelos.</p><h3>3. Caching</h3><p>Implementa estrategias de caching para mejorar el rendimiento.</p>",
+      "excerpt": "Mejora el rendimiento de tu aplicación Django con estas técnicas avanzadas de optimización de bases de datos.",
+      "created_date": "2025-01-27T14:00:00Z",
+      "published_date": "2025-01-27T14:00:00Z",
+      "published": true
+    }
+  }
+]

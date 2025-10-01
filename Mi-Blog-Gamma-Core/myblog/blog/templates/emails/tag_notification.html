@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevos posts sobre {{ tag }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f8f9fa; padding: 20px; border-radius: 0 0 10px 10px; }
+        .post { background: white; margin: 15px 0; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea; }
+        .post-title { color: #333; text-decoration: none; font-weight: bold; }
+        .post-meta { color: #666; font-size: 0.9em; margin: 5px 0; }
+        .post-excerpt { margin: 10px 0; }
+        .btn { display: inline-block; background: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 10px 0; }
+        .footer { text-align: center; margin-top: 20px; padding: 20px; border-top: 1px solid #ddd; color: #666; font-size: 0.9em; }
+        .tag { background: #e9ecef; padding: 2px 8px; border-radius: 12px; font-size: 0.9em; color: #495057; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Nuevos posts sobre <span class="tag">{{ tag }}</span></h1>
+        </div>
+        
+        <div class="content">
+            <p>Hola {{ user.first_name }},</p>
+            
+            <p>Se han publicado {% if posts.count == 1 %}un nuevo post{% else %}{{ posts.count }} nuevos posts{% endif %} sobre "{{ tag }}":</p>
+            
+            {% for post in posts %}
+                <div class="post">
+                    <h3><a href="http://localhost:8000{{ post.get_absolute_url }}" class="post-title">{{ post.title }}</a></h3>
+                    <div class="post-meta">
+                        Por: {{ post.author.first_name }} {{ post.author.last_name }}<br>
+                        Publicado: {{ post.published_date|date:"d M Y \a \l\a\s H:i" }}
+                    </div>
+                    {% if post.excerpt %}
+                        <div class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</div>
+                    {% endif %}
+                    <a href="http://localhost:8000{{ post.get_absolute_url }}" class="btn">Leer más</a>
+                </div>
+            {% endfor %}
+            
+            <p>¡No te pierdas estos nuevos contenidos sobre {{ tag }}!</p>
+            
+            <p>Saludos,<br>El equipo de Mi Blog</p>
+        </div>
+        
+        <div class="footer">
+            <p>Para gestionar tus suscripciones, <a href="http://localhost:8000{% url 'blog:subscriptions' %}">visita tu panel de suscripciones</a></p>
+        </div>
+    </div>
+</body>
+</html>
