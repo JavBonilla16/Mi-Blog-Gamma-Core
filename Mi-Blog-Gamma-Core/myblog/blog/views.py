@@ -126,6 +126,12 @@ def post_detail(request, slug):
         comment_form = CommentForm()
         review_form = ReviewForm()
 
+    # Preparar datos de votos del usuario para cada comentario
+    comment_votes = {}
+    if request.user.is_authenticated:
+        for comment in comments:
+            comment_votes[comment.id] = comment.get_user_vote(request.user)
+
     return render(request, 'blog/post_detail.html', {
         'post': post,
         'comments': comments,
@@ -136,7 +142,8 @@ def post_detail(request, slug):
         'user_review': user_review,
         'user_reaction': user_reaction,
         'can_moderate': can_moderate,
-        'reaction_types': Reaction.REACTION_TYPES
+        'reaction_types': Reaction.REACTION_TYPES,
+        'comment_votes': comment_votes
     })
 
 # Vistas de autenticación
@@ -274,12 +281,28 @@ def posts_by_tag(request, tag_slug):
 
 # Vistas para funcionalidades sociales
 
-@login_required
 def add_reaction(request, slug):
     """Vista para agregar/quitar reacciones a posts"""
-    if request.method == 'POST':
-        post = get_object_or_404(Post, slug=slug, published=True)
+    print(f"add_reaction called with slug: {slug}, method: {request.method}")
+    
+    post = get_object_or_404(Post, slug=slug, published=True)
+    
+    # Obtener contadores actuales para cualquier método
+    reaction_counts = {}
+    for choice in Reaction.REACTION_TYPES:
+        count = Reaction.objects.filter(post=post, reaction_type=choice[0]).count()
+        reaction_counts[choice[0]] = count
+    
+    if request.method == 'GET':
+        # Devolver solo los contadores
+        return JsonResponse({
+            'success': True,
+            'reaction_counts': reaction_counts
+        })
+    
+    if request.method == 'POST' and request.user.is_authenticated:
         reaction_type = request.POST.get('reaction_type')
+        print(f"Reaction type: {reaction_type}, User: {request.user}")
         
         if reaction_type in [choice[0] for choice in Reaction.REACTION_TYPES]:
             reaction, created = Reaction.objects.get_or_create(
@@ -300,21 +323,21 @@ def add_reaction(request, slug):
                     action = 'updated'
             else:
                 action = 'added'
-                # Enviar notificación solo cuando se agrega una nueva reacción
-                send_reaction_notification(post, request.user, reaction_type)
-            
-            # Obtener contadores actualizados
-            reaction_counts = {}
-            for choice in Reaction.REACTION_TYPES:
-                count = Reaction.objects.filter(post=post, reaction_type=choice[0]).count()
-                reaction_counts[choice[0]] = count
-            
-            return JsonResponse({
-                'success': True,
-                'action': action,
-                'reaction_counts': reaction_counts,
-                'user_reaction': reaction_type if action != 'removed' else None
-            })
+            # Enviar notificación solo cuando se agrega una nueva reacción
+            send_reaction_notification(post, request.user, reaction_type)
+        
+        # Recalcular contadores después de la acción
+        reaction_counts = {}
+        for choice in Reaction.REACTION_TYPES:
+            count = Reaction.objects.filter(post=post, reaction_type=choice[0]).count()
+            reaction_counts[choice[0]] = count
+        
+        return JsonResponse({
+            'success': True,
+            'action': action,
+            'reaction_counts': reaction_counts,
+            'user_reaction': reaction_type if action != 'removed' else None
+        })
     
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 

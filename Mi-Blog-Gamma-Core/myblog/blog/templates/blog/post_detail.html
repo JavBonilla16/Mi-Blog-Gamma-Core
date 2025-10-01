@@ -53,21 +53,29 @@
             </div>
             
             <!-- Reacciones rápidas -->
-            {% if user.is_authenticated %}
-                <div class="reactions-section mt-4 mb-4">
-                    <h6>Reacciones:</h6>
-                    <div class="reactions-container d-flex gap-2 flex-wrap">
-                        {% for reaction_type, reaction_label in reaction_types %}
+            <div class="reactions-section mt-4 mb-4">
+                <h6>Reacciones:</h6>
+                <div class="reactions-container d-flex gap-2 flex-wrap">
+                    {% for reaction_type, reaction_label in reaction_types %}
+                        {% if user.is_authenticated %}
                             <button class="btn btn-outline-secondary reaction-btn" 
                                     data-reaction="{{ reaction_type }}"
                                     data-post-slug="{{ post.slug }}">
                                 <span class="reaction-emoji">{{ reaction_type }}</span>
                                 <span class="reaction-count" id="count-{{ reaction_type }}">0</span>
                             </button>
-                        {% endfor %}
-                    </div>
+                        {% else %}
+                            <div class="btn btn-outline-secondary disabled" title="Inicia sesión para reaccionar">
+                                <span class="reaction-emoji">{{ reaction_type }}</span>
+                                <span class="reaction-count" id="count-{{ reaction_type }}">0</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-            {% endif %}
+                {% if not user.is_authenticated %}
+                    <small class="text-muted">Inicia sesión para reaccionar</small>
+                {% endif %}
+            </div>
             
             <!-- Botones de edición para el autor -->
             {% if user == post.author %}
@@ -175,14 +183,14 @@
                                     <button class="btn btn-sm btn-outline-success vote-btn" 
                                             data-comment-id="{{ comment.id }}" 
                                             data-vote="1"
-                                            {% if comment.get_user_vote:user == 1 %}style="background-color: #28a745; color: white;"{% endif %}>
+                                            id="upvote-{{ comment.id }}">
                                         <i class="fas fa-arrow-up"></i>
                                     </button>
                                     <span class="mx-2 fw-bold" id="score-{{ comment.id }}">{{ comment.get_score }}</span>
                                     <button class="btn btn-sm btn-outline-danger vote-btn" 
                                             data-comment-id="{{ comment.id }}" 
                                             data-vote="-1"
-                                            {% if comment.get_user_vote:user == -1 %}style="background-color: #dc3545; color: white;"{% endif %}>
+                                            id="downvote-{{ comment.id }}">
                                         <i class="fas fa-arrow-down"></i>
                                     </button>
                                 </div>
@@ -244,33 +252,75 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Token CSRF para JavaScript -->
+{% csrf_token %}
 <script>
 // Variables globales
-const csrfToken = '{{ csrf_token }}';
+const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+const csrfToken = csrfTokenElement ? csrfTokenElement.value : '{{ csrf_token }}';
 const postSlug = '{{ post.slug }}';
+
+console.log('CSRF Token:', csrfToken);
+console.log('Post Slug:', postSlug);
 
 // Inicializar contadores de reacciones
 document.addEventListener('DOMContentLoaded', function() {
-    // Obtener contadores actuales de reacciones
-    {% for reaction_type, reaction_label in reaction_types %}
-        updateReactionCount('{{ reaction_type }}', 0); // Se actualizarán con AJAX
-    {% endfor %}
+    // Cargar contadores actuales de reacciones desde el servidor
+    loadReactionCounts();
     
     // Marcar reacción actual del usuario
     {% if user_reaction %}
         markUserReaction('{{ user_reaction.reaction_type }}');
     {% endif %}
+    
+    // Inicializar estilos de votos de comentarios
+    {% for comment_id, user_vote in comment_votes.items %}
+        {% if user_vote == 1 %}
+            updateVoteButtons({{ comment_id }}, 1);
+        {% elif user_vote == -1 %}
+            updateVoteButtons({{ comment_id }}, -1);
+        {% endif %}
+    {% endfor %}
 });
+
+function loadReactionCounts() {
+    fetch(`{% url 'blog:add_reaction' post.slug %}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.reaction_counts) {
+            Object.keys(data.reaction_counts).forEach(type => {
+                updateReactionCount(type, data.reaction_counts[type]);
+            });
+        }
+    })
+    .catch(error => {
+        console.log('Error loading reaction counts:', error);
+        // Si falla, usar contadores por defecto
+        {% for reaction_type, reaction_label in reaction_types %}
+            updateReactionCount('{{ reaction_type }}', 0);
+        {% endfor %}
+    });
+}
 
 // Manejar reacciones
 document.querySelectorAll('.reaction-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const reactionType = this.dataset.reaction;
+        console.log('Reaction clicked:', reactionType);
         addReaction(reactionType);
     });
 });
 
 function addReaction(reactionType) {
+    console.log('Sending reaction:', reactionType);
+    console.log('URL:', `{% url 'blog:add_reaction' post.slug %}`);
+    console.log('CSRF Token:', csrfToken);
+    
     fetch(`{% url 'blog:add_reaction' post.slug %}`, {
         method: 'POST',
         headers: {
@@ -279,8 +329,12 @@ function addReaction(reactionType) {
         },
         body: `reaction_type=${reactionType}`
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.success) {
             // Actualizar contadores
             Object.keys(data.reaction_counts).forEach(type => {
@@ -293,6 +347,8 @@ function addReaction(reactionType) {
             } else {
                 clearUserReaction();
             }
+        } else {
+            console.error('Reaction failed:', data.error);
         }
     })
     .catch(error => console.error('Error:', error));
