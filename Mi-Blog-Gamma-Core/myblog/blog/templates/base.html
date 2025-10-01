@@ -31,9 +31,9 @@
                         <li class="nav-item">
                             <a class="nav-link position-relative" href="{% url 'blog:notifications' %}">
                                 <i class="fas fa-bell"></i>
-                                {% if user.notifications.filter.is_read=False.count > 0 %}
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ user.notifications.filter.is_read=False.count }}
+                                {% if user.is_authenticated %}
+                                    <span id="notification-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                                        0
                                     </span>
                                 {% endif %}
                             </a>
@@ -102,5 +102,25 @@
     </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% if user.is_authenticated %}
+    <script>
+    // Cargar contador de notificaciones no leídas
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/notifications/count/')
+            .then(response => response.json())
+            .then(data => {
+                const notificationCount = document.getElementById('notification-count');
+                if (data.count > 0) {
+                    notificationCount.textContent = data.count;
+                    notificationCount.style.display = 'block';
+                } else {
+                    notificationCount.style.display = 'none';
+                }
+            })
+            .catch(error => console.log('Error loading notification count:', error));
+    });
+    </script>
+    {% endif %}
 </body>
 </html>

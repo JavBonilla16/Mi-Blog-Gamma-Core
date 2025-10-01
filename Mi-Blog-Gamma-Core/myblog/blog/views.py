@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
@@ -388,6 +389,12 @@ def mark_notification_read(request, notification_id):
     return redirect('blog:notifications')
 
 @login_required
+def notification_count(request):
+    """Vista para obtener el contador de notificaciones no leídas"""
+    count = request.user.notifications.filter(is_read=False).count()
+    return JsonResponse({'count': count})
+
+@login_required
 def subscriptions(request):
     """Vista para gestionar suscripciones"""
     user_subscriptions = request.user.subscriptions.all()
@@ -425,7 +432,7 @@ def subscriptions(request):
         return redirect('blog:subscriptions')
     
     # Obtener autores que han publicado posts
-    authors = User.objects.filter(posts__published=True).distinct().order_by('first_name', 'last_name')
+    authors = User.objects.filter(post__published=True).distinct().order_by('first_name', 'last_name')
     
     return render(request, 'blog/subscriptions.html', {
         'subscriptions': user_subscriptions,
